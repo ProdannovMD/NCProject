@@ -13,7 +13,7 @@ public class ConsoleHandler implements Handler {
                 .append(level).append(" ");
 
         if (name != null && !name.isEmpty())
-            sb.append(name).append(" ");
+            sb.append("[").append(name).append("] ");
 
         if (message != null && !message.isEmpty())
             sb.append(message).append(" ");

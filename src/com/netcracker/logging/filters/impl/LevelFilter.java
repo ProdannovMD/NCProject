@@ -4,7 +4,7 @@ import com.netcracker.logging.filters.Filter;
 import com.netcracker.logging.levels.Level;
 
 public class LevelFilter implements Filter {
-    private Level level = Level.INFO;
+    private Level level = Level.ERROR;
 
     public LevelFilter() {
     }
