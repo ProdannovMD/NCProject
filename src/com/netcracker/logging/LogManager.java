@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class LogManager {
-    private static final Logger LOGGER = Configuration.DEFAULT_CONFIGURATION.getLogger("ROOT");
+    private static Logger LOGGER = Configuration.DEFAULT_CONFIGURATION.getLogger(LogManager.class.getName());
     private static final String CONFIGURATION_NAME = "log-config.xml";
     private static final Configuration CONFIGURATION;
 
@@ -22,8 +22,6 @@ public class LogManager {
 
     public static Logger getLogger(Class<?> clazz) {
         String name = clazz.getName();
-//        int idx = name.lastIndexOf(".");
-//        name = name.substring(0, idx);
         return getLogger(name);
     }
 
@@ -41,17 +39,19 @@ public class LogManager {
             } catch (IOException ignored) { }
         }
         if (configFile == null) {
-            LOGGER.error("Cannot find configuration file. Using default configuration");
+            LOGGER.warn("Cannot find configuration file. Using default configuration");
             CONFIGURATION = Configuration.DEFAULT_CONFIGURATION;
         } else {
-
+            LOGGER.info("Using configuration file: " + configFile);
             Configuration configuration = XMLConfigurationParser.parse(configFile);
             if (configuration == null) {
-                LOGGER.error("Could not parse configuration file. Using default configuration");
+                LOGGER.warn("Could not parse configuration file. Using default configuration");
                 configuration = Configuration.DEFAULT_CONFIGURATION;
             }
             CONFIGURATION = configuration;
         }
         LOGGER.info("Ending configuration");
+        LOGGER = CONFIGURATION.getLogger(LogManager.class.getName());
+        LOGGER.start();
     }
 }

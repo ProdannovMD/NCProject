@@ -35,9 +35,42 @@ public class Logger {
         logMessage(Level.INFO, message, null);
     }
 
+    public void info(Throwable throwable) {
+        logMessage(Level.INFO, null, throwable);
+    }
+
+    public void warn(String message) {
+        logMessage(Level.WARN, message, null);
+    }
+
+    public void warn(Throwable throwable) {
+        logMessage(Level.WARN, null, throwable);
+    }
+
+    public void fatal(String message) {
+        logMessage(Level.FATAL, message, null);
+    }
+
+    public void fatal(Throwable throwable) {
+        logMessage(Level.FATAL, null, throwable);
+    }
+
     public void error(String message) {
         logMessage(Level.ERROR, message, null);
     }
+
+    public void error(Throwable throwable) {
+        logMessage(Level.ERROR, null, throwable);
+    }
+
+    public void debug(String message) {
+        logMessage(Level.DEBUG, message, null);
+    }
+
+    public void debug(Throwable throwable) {
+        logMessage(Level.DEBUG, null, throwable);
+    }
+
 
     private boolean isApplicable(Level level, String message, Throwable throwable) {
         for (Filter filter : FILTERS) {
