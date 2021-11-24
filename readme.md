@@ -4,6 +4,7 @@
 Файл log-config.xml должен находится в корне проекта, или в папке ./resources
 
 Формат файла log-config.xml:
+```xml
 <Configuration>
   <Handlers>
     <Console name="handler1">
@@ -23,3 +24,4 @@
     ...
   </Loggers>
 </Configuration>
+.```
