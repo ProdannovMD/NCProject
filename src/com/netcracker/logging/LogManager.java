@@ -42,6 +42,7 @@ public class LogManager {
             LOGGER.warn("Cannot find configuration file. Using default configuration");
             CONFIGURATION = Configuration.DEFAULT_CONFIGURATION;
         } else {
+            String s = configFile.toString();
             LOGGER.info("Using configuration file: " + configFile);
             Configuration configuration = XMLConfigurationParser.parse(configFile);
             if (configuration == null) {

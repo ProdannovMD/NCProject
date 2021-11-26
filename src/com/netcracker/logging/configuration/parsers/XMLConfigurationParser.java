@@ -5,6 +5,7 @@ import com.netcracker.logging.filters.Filter;
 import com.netcracker.logging.filters.impl.LevelFilter;
 import com.netcracker.logging.handlers.Handler;
 import com.netcracker.logging.handlers.impl.ConsoleHandler;
+import com.netcracker.logging.handlers.layouts.PatternLayout;
 import com.netcracker.logging.levels.Level;
 import com.netcracker.logging.loggers.Logger;
 import org.w3c.dom.Document;
@@ -45,11 +46,7 @@ public class XMLConfigurationParser {
                         Node handlerNode = handlerNodes.item(j);
                         switch (handlerNode.getNodeName()) {
                             case "Console":
-                                Node handlerName = handlerNode.getAttributes().getNamedItem("name");
-                                if (handlerName == null)
-                                    continue;
-
-                                handlers.put(handlerName.getNodeValue(), new ConsoleHandler());
+                                parseConsoleHandler(handlerNode, handlers);
                                 break;
 
                             default:
@@ -86,9 +83,6 @@ public class XMLConfigurationParser {
                     }
                 }
             }
-
-//            System.out.println(handlers);
-//            System.out.println(filters);
 
             for (int i = 0; i < childNodes.getLength(); i++) {
                 Node child = childNodes.item(i);
@@ -144,6 +138,29 @@ public class XMLConfigurationParser {
         } catch (ParserConfigurationException | IOException | SAXException e) {
             return null;
         }
+    }
+
+    private static void parseConsoleHandler(Node handlerNode, Map<String, Handler> handlers) {
+        PatternLayout layout = PatternLayout.DEFAULT;
+        NodeList childNodes = handlerNode.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
+            if (childNode.getNodeName().equals("PatternLayout")) {
+                Node patternAttr = childNode.getAttributes().getNamedItem("pattern");
+                if (patternAttr == null) {
+                    layout = PatternLayout.DEFAULT;
+                } else {
+                    layout = new PatternLayout(patternAttr.getNodeValue());
+                }
+            }
+        }
+
+        Node handlerName = handlerNode.getAttributes().getNamedItem("name");
+        if (handlerName == null)
+            return;
+
+        ConsoleHandler consoleHandler = new ConsoleHandler(layout);
+        handlers.put(handlerName.getNodeValue(), consoleHandler);
     }
 
     public static void main(String[] args) {
