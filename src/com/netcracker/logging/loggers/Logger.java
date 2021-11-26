@@ -71,6 +71,14 @@ public class Logger {
         logMessage(Level.DEBUG, null, throwable);
     }
 
+    public void trace(String message) {
+        logMessage(Level.TRACE, message, null);
+    }
+
+    public void trace(Throwable throwable) {
+        logMessage(Level.TRACE, null, throwable);
+    }
+
 
     private boolean isApplicable(Level level, String message, Throwable throwable) {
         for (Filter filter : FILTERS) {
