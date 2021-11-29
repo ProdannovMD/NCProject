@@ -47,8 +47,12 @@ public class PatternLayout {
             String format = matcher.group(5);
             String formatted;
             if (format != null) {
-                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
-                formatted = dateTimeFormatter.format(dateTime);
+                try {
+                    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
+                    formatted = dateTimeFormatter.format(dateTime);
+                } catch (IllegalArgumentException e) {
+                    formatted = dateTime.toString();
+                }
             } else {
                 formatted = dateTime.toString();
             }
@@ -81,10 +85,15 @@ public class PatternLayout {
     }
 
     private String applyLevel(String currentMessage, Level level) {
-        return currentMessage.replaceAll("%level", level.toString());
+        String levelString = "";
+        if (level != null)
+            levelString = level.toString();
+        return currentMessage.replaceAll("%level", levelString);
     }
 
     private String applyLoggerName(String currentMessage, String name) {
+        if (name == null)
+            name = "";
         String newMessage = currentMessage;
         String stringPattern = "%logger(\\{(\\d+)})?";
         Pattern loggerNamePattern = Pattern.compile(stringPattern);
