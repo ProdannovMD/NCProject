@@ -4,6 +4,9 @@
     <Console name="consoleHandler">
       <PatternLayout pattern="%d{HH:mm:ss.SSS}::%N [%t] %level %logger{36} - %msg%n"/>
     </Console>
+    <File name="fileHandler" fileName="resources/logs/app-logs.txt">
+      <PatternLayout pattern="to file: %d{HH:mm:ss.SSS}::%N [%t] %level %logger{36} - %msg"/>
+    </File>
   </Handlers>
   <Filters>
     <Level name="infoLevelFilter" level="info"/>
@@ -11,6 +14,7 @@
   <Loggers>
     <Logger name="com.netcracker.project.MyClass">
       <HandlerRef ref="consoleHandler"/>
+      <HandlerRef ref="fileHandler"/>
       <FilterRef ref="infoLevelFilter"/>
     </Logger>
   </Loggers>

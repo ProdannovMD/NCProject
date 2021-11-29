@@ -1,0 +1,2 @@
+to file: 15:18:35.538::21231289477200 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:18:38.395::21234145860900 [main] INFO com.netcracker.project.MyClass - Test

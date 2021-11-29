@@ -5,6 +5,7 @@ import com.netcracker.logging.filters.Filter;
 import com.netcracker.logging.filters.impl.LevelFilter;
 import com.netcracker.logging.handlers.Handler;
 import com.netcracker.logging.handlers.impl.ConsoleHandler;
+import com.netcracker.logging.handlers.impl.FileHandler;
 import com.netcracker.logging.handlers.layouts.PatternLayout;
 import com.netcracker.logging.levels.Level;
 import com.netcracker.logging.loggers.Logger;
@@ -22,6 +23,8 @@ import java.nio.file.Paths;
 import java.util.*;
 
 public class XMLConfigurationParser {
+    private static final Logger LOGGER = Configuration.DEFAULT_CONFIGURATION.getLogger("Configuration");
+
     public static Configuration parse(Path path) {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         Map<String, Handler> handlers = new HashMap<>();
@@ -49,6 +52,10 @@ public class XMLConfigurationParser {
                                 parseConsoleHandler(handlerNode, handlers);
                                 break;
 
+                            case "File":
+                                parseFileHandler(handlerNode, handlers);
+                                break;
+
                             default:
                         }
                     }
@@ -60,22 +67,7 @@ public class XMLConfigurationParser {
                         Node filterNode = filterNodes.item(j);
                         switch (filterNode.getNodeName()) {
                             case "Level":
-                                Node filterName = filterNode.getAttributes().getNamedItem("name");
-                                Node filterLevel = filterNode.getAttributes().getNamedItem("level");
-                                Level level = null;
-                                if (filterName == null)
-                                    continue;
-                                if (filterLevel != null) {
-                                    try {
-                                        level = Level.valueOf(filterLevel.getNodeValue().toUpperCase(Locale.ROOT));
-                                    } catch (IllegalArgumentException ignored) { }
-                                }
-
-                                if (level == null)
-                                    filters.put(filterName.getNodeValue(), new LevelFilter());
-                                else
-                                    filters.put(filterName.getNodeValue(), new LevelFilter(level));
-
+                                parseLevelFilter(filterNode, filters);
                                 break;
 
                             default:
@@ -132,15 +124,86 @@ public class XMLConfigurationParser {
                 }
             }
 
-//            System.out.println(loggers);
-
             return new Configuration(loggers);
         } catch (ParserConfigurationException | IOException | SAXException e) {
             return null;
         }
     }
 
+    private static void parseLevelFilter(Node filterNode, Map<String, Filter> filters) {
+        Node filterName = filterNode.getAttributes().getNamedItem("name");
+        Node filterLevel = filterNode.getAttributes().getNamedItem("level");
+        Level level = null;
+        if (filterName == null)
+            return;
+
+        if (filterLevel == null) {
+            LOGGER.warn(
+                    "Warning for filter " +
+                            filterName.getNodeValue() +
+                            ": no level specified, using default level"
+            );
+        } else {
+            try {
+                level = Level.valueOf(filterLevel.getNodeValue().toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException e) {
+                LOGGER.warn(
+                        "Warning for filter " +
+                                filterName.getNodeValue() +
+                                ": unsupported level value, using default level"
+                );
+            }
+        }
+
+        if (level == null)
+            filters.put(filterName.getNodeValue(), new LevelFilter());
+        else
+            filters.put(filterName.getNodeValue(), new LevelFilter(level));
+
+    }
+
     private static void parseConsoleHandler(Node handlerNode, Map<String, Handler> handlers) {
+        PatternLayout layout = getPatternLayout(handlerNode);
+
+        Node handlerName = handlerNode.getAttributes().getNamedItem("name");
+        if (handlerName == null)
+            return;
+
+        ConsoleHandler consoleHandler = new ConsoleHandler(layout);
+        handlers.put(handlerName.getNodeValue(), consoleHandler);
+    }
+
+    private static void parseFileHandler(Node handlerNode, Map<String, Handler> handlers) {
+        PatternLayout layout = getPatternLayout(handlerNode);
+
+        Node handlerName = handlerNode.getAttributes().getNamedItem("name");
+        if (handlerName == null)
+            return;
+
+        Node fileName = handlerNode.getAttributes().getNamedItem("fileName");
+        if (fileName == null) {
+            LOGGER.error(
+                    "Error with handler " +
+                            handlerName.getNodeValue() +
+                            ": no file name specified"
+            );
+            return;
+        }
+
+        try {
+            FileHandler fileHandler = new FileHandler(fileName.getNodeValue(), layout);
+            handlers.put(handlerName.getNodeValue(), fileHandler);
+        } catch (IOException e) {
+            LOGGER.error(
+                    "Error with handler " +
+                            handlerName.getNodeValue() +
+                            ": cannot write to file " +
+                            fileName.getNodeValue()
+            );
+        }
+    }
+
+    private static PatternLayout getPatternLayout(Node handlerNode) {
         PatternLayout layout = PatternLayout.DEFAULT;
         NodeList childNodes = handlerNode.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -154,13 +217,7 @@ public class XMLConfigurationParser {
                 }
             }
         }
-
-        Node handlerName = handlerNode.getAttributes().getNamedItem("name");
-        if (handlerName == null)
-            return;
-
-        ConsoleHandler consoleHandler = new ConsoleHandler(layout);
-        handlers.put(handlerName.getNodeValue(), consoleHandler);
+        return layout;
     }
 
     public static void main(String[] args) {
