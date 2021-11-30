@@ -1,3 +1,10 @@
 to file: 15:18:35.538::21231289477200 [main] INFO com.netcracker.project.MyClass - Test
 to file: 15:18:38.395::21234145860900 [main] INFO com.netcracker.project.MyClass - Test
 to file: 15:18:42.181::21237932130400 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:32:09.622::15399371922000 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:33:46.107::15495856957200 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:36:07.563::15637313787400 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:39:52.800::15862550708500 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:40:41.283::15911033769100 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:41:51.233::15980984064300 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:49:01.219::16410969658600 [main] INFO com.netcracker.project.MyClass - Test

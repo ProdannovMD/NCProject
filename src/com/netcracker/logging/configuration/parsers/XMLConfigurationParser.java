@@ -6,6 +6,7 @@ import com.netcracker.logging.filters.impl.LevelFilter;
 import com.netcracker.logging.handlers.Handler;
 import com.netcracker.logging.handlers.impl.ConsoleHandler;
 import com.netcracker.logging.handlers.impl.FileHandler;
+import com.netcracker.logging.handlers.impl.MailHandler;
 import com.netcracker.logging.handlers.layouts.PatternLayout;
 import com.netcracker.logging.levels.Level;
 import com.netcracker.logging.loggers.Logger;
@@ -54,6 +55,10 @@ public class XMLConfigurationParser {
 
                             case "File":
                                 parseFileHandler(handlerNode, handlers);
+                                break;
+
+                            case "Mail":
+                                parseMailHandler(handlerNode, handlers);
                                 break;
 
                             default:
@@ -163,18 +168,18 @@ public class XMLConfigurationParser {
     }
 
     private static void parseConsoleHandler(Node handlerNode, Map<String, Handler> handlers) {
-        PatternLayout layout = getPatternLayout(handlerNode);
+        PatternLayout layout = parsePatternLayout(handlerNode);
 
         Node handlerName = handlerNode.getAttributes().getNamedItem("name");
         if (handlerName == null)
             return;
 
-        ConsoleHandler consoleHandler = new ConsoleHandler(layout);
+        Handler consoleHandler = new ConsoleHandler(layout);
         handlers.put(handlerName.getNodeValue(), consoleHandler);
     }
 
     private static void parseFileHandler(Node handlerNode, Map<String, Handler> handlers) {
-        PatternLayout layout = getPatternLayout(handlerNode);
+        PatternLayout layout = parsePatternLayout(handlerNode);
 
         Node handlerName = handlerNode.getAttributes().getNamedItem("name");
         if (handlerName == null)
@@ -191,7 +196,7 @@ public class XMLConfigurationParser {
         }
 
         try {
-            FileHandler fileHandler = new FileHandler(fileName.getNodeValue(), layout);
+            Handler fileHandler = new FileHandler(fileName.getNodeValue(), layout);
             handlers.put(handlerName.getNodeValue(), fileHandler);
         } catch (IOException e) {
             LOGGER.error(
@@ -203,7 +208,47 @@ public class XMLConfigurationParser {
         }
     }
 
-    private static PatternLayout getPatternLayout(Node handlerNode) {
+    private static void parseMailHandler(Node handlerNode, Map<String, Handler> handlers) {
+        PatternLayout layout = parsePatternLayout(handlerNode);
+
+        Node handlerName = handlerNode.getAttributes().getNamedItem("name");
+        if (handlerName == null)
+            return;
+
+        Properties properties = new Properties();
+        properties.put("mail.smtp.auth", true);
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.subject", "Application Logs");
+        parseProperties(handlerNode, properties);
+
+        Handler mailHandler = new MailHandler(properties, layout);
+        handlers.put(handlerName.getNodeValue(), mailHandler);
+
+    }
+
+    private static void parseProperties(Node handlerNode, Properties properties) {
+        NodeList childNodes = handlerNode.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
+            if (childNode.getNodeName().equals("Properties")) {
+                NodeList propertyNodes = childNode.getChildNodes();
+                for (int j = 0; j < propertyNodes.getLength(); j++) {
+                    Node propertyNode = propertyNodes.item(j);
+                    if (propertyNode.getNodeName().equals("Property")) {
+                        Node propName = propertyNode.getAttributes().getNamedItem("name");
+                        Node propValue = propertyNode.getAttributes().getNamedItem("value");
+                        if (propName == null || propValue == null)
+                            continue;
+
+                        properties.put(propName.getNodeValue(), propValue.getNodeValue());
+                    }
+                }
+
+            }
+        }
+    }
+
+    private static PatternLayout parsePatternLayout(Node handlerNode) {
         PatternLayout layout = PatternLayout.DEFAULT;
         NodeList childNodes = handlerNode.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {

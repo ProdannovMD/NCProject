@@ -7,6 +7,21 @@
     <File name="fileHandler" fileName="resources/logs/app-logs.txt">
       <PatternLayout pattern="to file: %d{HH:mm:ss.SSS}::%N [%t] %level %logger{36} - %msg"/>
     </File>
+    <Mail name="mailHandler">
+      <PatternLayout pattern="to mail: %d{HH:mm:ss.SSS}::%N [%t] %level %logger{36} - %msg"/>
+      <Properties>
+        <Property name="mail.smtp.auth" value="true"/>
+        <Property name="mail.smtp.starttls.enable" value="true"/>
+        <Property name="mail.smtp.host" value="smtp.mailtrap.io"/>
+        <Property name="mail.smtp.port" value="2525"/>
+        <Property name="mail.smtp.ssl.trust" value="smtp.mailtrap.io"/>
+        <Property name="mail.smtp.user" value="9037aa6f74e463"/>
+        <Property name="mail.smtp.password" value="f9ae46d93c0655"/>
+        <Property name="mail.smtp.from" value="nclogger@mail.ru"/>
+        <Property name="mail.smtp.to" value="prodanovmd@gmail.com"/>
+        <Property name="mail.smtp.subject" value="My Application Logs"/>
+      </Properties>
+    </Mail>
   </Handlers>
   <Filters>
     <Level name="infoLevelFilter" level="info"/>
@@ -15,6 +30,7 @@
     <Logger name="com.netcracker.project.MyClass">
       <HandlerRef ref="consoleHandler"/>
       <HandlerRef ref="fileHandler"/>
+      <HandlerRef ref="mailHandler"/>
       <FilterRef ref="infoLevelFilter"/>
     </Logger>
   </Loggers>
