@@ -19,7 +19,7 @@ import java.util.Map;
 public class Configuration {
 
     private static final Handler DEFAULT_HANDLER = new ConsoleHandler();
-    private static final Filter DEFAULT_FILTER = new LevelFilter();
+    private static final Filter DEFAULT_FILTER = new LevelFilter(null, null);
     private final Map<String, Logger> loggers = new HashMap<>();
     private final File ROOT;
     private final Logger ROOT_LOGGER;

@@ -4,8 +4,7 @@ import com.netcracker.logging.configuration.Configuration;
 import com.netcracker.logging.configuration.parsers.XMLConfigurationParser;
 import com.netcracker.logging.loggers.Logger;
 
-import java.io.IOException;
-import java.nio.file.LinkOption;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -28,17 +27,13 @@ public class LogManager {
     static {
         LOGGER.start();
         LOGGER.info("Starting configuration");
-        Path configFile = null;
         Path root = Paths.get(".");
-        try {
-            configFile = root.resolve(CONFIGURATION_NAME).toRealPath(LinkOption.NOFOLLOW_LINKS);
-        } catch (IOException ignore) { }
-        if (configFile == null) {
-            try {
-                configFile = root.resolve("resources").resolve(CONFIGURATION_NAME).toRealPath(LinkOption.NOFOLLOW_LINKS);
-            } catch (IOException ignored) { }
+        Path configFile = root.resolve(CONFIGURATION_NAME);
+
+        if (!Files.exists(configFile)) {
+            configFile = root.resolve("resources").resolve(CONFIGURATION_NAME);
         }
-        if (configFile == null) {
+        if (!Files.exists(configFile)) {
             LOGGER.warn("Cannot find configuration file. Using default configuration");
             CONFIGURATION = Configuration.DEFAULT_CONFIGURATION;
         } else {
@@ -51,6 +46,7 @@ public class LogManager {
             }
             CONFIGURATION = configuration;
         }
+
         LOGGER.info("Ending configuration");
         LOGGER = CONFIGURATION.getLogger(LogManager.class.getName());
         LOGGER.start();

@@ -3,6 +3,7 @@ package com.netcracker.logging.configuration.parsers;
 import com.netcracker.logging.configuration.Configuration;
 import com.netcracker.logging.filters.Filter;
 import com.netcracker.logging.filters.impl.LevelFilter;
+import com.netcracker.logging.filters.impl.LevelFilterModes;
 import com.netcracker.logging.handlers.Handler;
 import com.netcracker.logging.handlers.impl.ConsoleHandler;
 import com.netcracker.logging.handlers.impl.FileHandler;
@@ -12,6 +13,7 @@ import com.netcracker.logging.handlers.layouts.HTMLLayout;
 import com.netcracker.logging.handlers.layouts.PatternLayout;
 import com.netcracker.logging.levels.Level;
 import com.netcracker.logging.loggers.Logger;
+import com.netcracker.logging.loggers.LoggerFiltersModes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -95,41 +97,7 @@ public class XMLConfigurationParser {
                         Node loggerNode = loggerNodes.item(j);
 
                         if (loggerNode.getNodeName().equals("Logger")) {
-                            Node loggerName = loggerNode.getAttributes().getNamedItem("name");
-                            if (loggerName == null)
-                                continue;
-
-                            List<Handler> loggerHandlers = new ArrayList<>();
-                            List<Filter> loggerFilters = new ArrayList<>();
-
-                            NodeList loggerRefNodes = loggerNode.getChildNodes();
-                            for (int k = 0; k < loggerRefNodes.getLength(); k++) {
-                                Node refNode = loggerRefNodes.item(k);
-                                switch (refNode.getNodeName()) {
-                                    case "HandlerRef":
-                                        Node handlerRef = refNode.getAttributes().getNamedItem("ref");
-                                        if (handlerRef == null)
-                                            continue;
-                                        String handlerRefValue = handlerRef.getNodeValue();
-                                        if (handlers.containsKey(handlerRefValue))
-                                            loggerHandlers.add(handlers.get(handlerRefValue));
-                                        break;
-
-                                    case "FilterRef":
-                                        Node filterRef = refNode.getAttributes().getNamedItem("ref");
-                                        if (filterRef == null)
-                                            continue;
-                                        String filterRefValue = filterRef.getNodeValue();
-                                        if (filters.containsKey(filterRefValue))
-                                            loggerFilters.add(filters.get(filterRefValue));
-                                        break;
-
-                                    default:
-                                }
-                            }
-
-                            Logger logger = new Logger(loggerName.getNodeValue(), loggerHandlers, loggerFilters);
-                            loggers.put(loggerName.getNodeValue(), logger);
+                            parseLogger(handlers, filters, loggers, loggerNode);
                         }
                     }
                 }
@@ -141,9 +109,58 @@ public class XMLConfigurationParser {
         }
     }
 
+    private static void parseLogger(
+            Map<String, Handler> handlers, Map<String, Filter> filters, Map<String, Logger> loggers, Node loggerNode
+    ) {
+        Node loggerName = loggerNode.getAttributes().getNamedItem("name");
+        Node filtersMode = loggerNode.getAttributes().getNamedItem("filtersMode");
+        if (loggerName == null)
+            return;
+
+        LoggerFiltersModes mode = LoggerFiltersModes.AND;
+        if (filtersMode != null) {
+            try {
+                mode = LoggerFiltersModes.valueOf(filtersMode.getNodeValue().toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException ignored) { }
+        }
+
+        List<Handler> loggerHandlers = new ArrayList<>();
+        List<Filter> loggerFilters = new ArrayList<>();
+
+        NodeList loggerRefNodes = loggerNode.getChildNodes();
+        for (int k = 0; k < loggerRefNodes.getLength(); k++) {
+            Node refNode = loggerRefNodes.item(k);
+            switch (refNode.getNodeName()) {
+                case "HandlerRef":
+                    Node handlerRef = refNode.getAttributes().getNamedItem("ref");
+                    if (handlerRef == null)
+                        continue;
+                    String handlerRefValue = handlerRef.getNodeValue();
+                    if (handlers.containsKey(handlerRefValue))
+                        loggerHandlers.add(handlers.get(handlerRefValue));
+                    break;
+
+                case "FilterRef":
+                    Node filterRef = refNode.getAttributes().getNamedItem("ref");
+                    if (filterRef == null)
+                        continue;
+                    String filterRefValue = filterRef.getNodeValue();
+                    if (filters.containsKey(filterRefValue))
+                        loggerFilters.add(filters.get(filterRefValue));
+                    break;
+
+                default:
+            }
+        }
+
+        Logger logger = new Logger(loggerName.getNodeValue(), loggerHandlers, loggerFilters, mode);
+        loggers.put(loggerName.getNodeValue(), logger);
+    }
+
     private static void parseLevelFilter(Node filterNode, Map<String, Filter> filters) {
         Node filterName = filterNode.getAttributes().getNamedItem("name");
         Node filterLevel = filterNode.getAttributes().getNamedItem("level");
+        Node filterMode = filterNode.getAttributes().getNamedItem("mode");
         Level level = null;
         if (filterName == null)
             return;
@@ -166,10 +183,15 @@ public class XMLConfigurationParser {
             }
         }
 
-        if (level == null)
-            filters.put(filterName.getNodeValue(), new LevelFilter());
-        else
-            filters.put(filterName.getNodeValue(), new LevelFilter(level));
+        LevelFilterModes mode = null;
+        if (filterMode != null) {
+            try {
+                mode = LevelFilterModes.valueOf(filterMode.getNodeValue().toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+
+        filters.put(filterName.getNodeValue(), new LevelFilter(level, mode));
 
     }
 

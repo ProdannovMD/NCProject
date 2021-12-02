@@ -13,6 +13,7 @@ public class Logger {
     private final List<Handler> HANDLERS;
     private final List<Filter> FILTERS;
     private final List<Logger> CHILDREN_LOGGERS;
+    private LoggerFiltersModes mode = LoggerFiltersModes.AND;
     private boolean started;
 
     public Logger(String name, List<Handler> handlers, List<Filter> filters) {
@@ -21,6 +22,11 @@ public class Logger {
         this.CHILDREN_LOGGERS = new ArrayList<>();
         this.NAME = name;
         started = false;
+    }
+
+    public Logger(String name, List<Handler> handlers, List<Filter> filters, LoggerFiltersModes mode) {
+        this(name, handlers, filters);
+        this.mode = mode;
     }
 
     public void start() {
@@ -81,11 +87,19 @@ public class Logger {
 
 
     private boolean isApplicable(Level level, String message, Throwable throwable) {
-        for (Filter filter : FILTERS) {
-            if (!filter.isApplicable(level, message, NAME, throwable))
-                return false;
+        if (mode == LoggerFiltersModes.AND) {
+            for (Filter filter : FILTERS) {
+                if (!filter.isApplicable(level, message, NAME, throwable))
+                    return false;
+            }
+            return true;
+        } else {
+            for (Filter filter : FILTERS) {
+                if (filter.isApplicable(level, message, NAME, throwable))
+                    return true;
+            }
+            return false;
         }
-        return true;
     }
 
     private void logMessage(Level level, String message, Throwable throwable) {
