@@ -22,16 +22,20 @@
         <Property name="mail.smtp.subject" value="My Application Logs"/>
       </Properties>
     </Mail>
+    <HTML name="htmlHandler" fileName="resources/logs/app-logs.html">
+      <HTMLLayout title="My title" dateTimePattern="HH:mm:ss.SSS"/>
+    </HTML>
   </Handlers>
   <Filters>
-    <Level name="infoLevelFilter" level="info"/>
+    <Level name="errorLevelFilter" level="error"/>
   </Filters>
   <Loggers>
     <Logger name="com.netcracker.project.MyClass">
       <HandlerRef ref="consoleHandler"/>
       <HandlerRef ref="fileHandler"/>
-      <HandlerRef ref="mailHandler"/>
-      <FilterRef ref="infoLevelFilter"/>
+<!--      <HandlerRef ref="mailHandler"/>-->
+      <HandlerRef ref="htmlHandler"/>
+      <FilterRef ref="errorLevelFilter"/>
     </Logger>
   </Loggers>
 </Configuration>

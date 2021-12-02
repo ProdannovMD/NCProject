@@ -6,7 +6,9 @@ import com.netcracker.logging.filters.impl.LevelFilter;
 import com.netcracker.logging.handlers.Handler;
 import com.netcracker.logging.handlers.impl.ConsoleHandler;
 import com.netcracker.logging.handlers.impl.FileHandler;
+import com.netcracker.logging.handlers.impl.HTMLHandler;
 import com.netcracker.logging.handlers.impl.MailHandler;
+import com.netcracker.logging.handlers.layouts.HTMLLayout;
 import com.netcracker.logging.handlers.layouts.PatternLayout;
 import com.netcracker.logging.levels.Level;
 import com.netcracker.logging.loggers.Logger;
@@ -59,6 +61,10 @@ public class XMLConfigurationParser {
 
                             case "Mail":
                                 parseMailHandler(handlerNode, handlers);
+                                break;
+
+                            case "HTML":
+                                parseHTMLHandler(handlerNode, handlers);
                                 break;
 
                             default:
@@ -226,6 +232,36 @@ public class XMLConfigurationParser {
 
     }
 
+    private static void parseHTMLHandler(Node handlerNode, Map<String, Handler> handlers) {
+        HTMLLayout layout = parseHTMLLayout(handlerNode);
+
+        Node handlerName = handlerNode.getAttributes().getNamedItem("name");
+        if (handlerName == null)
+            return;
+
+        Node fileName = handlerNode.getAttributes().getNamedItem("fileName");
+        if (fileName == null) {
+            LOGGER.error(
+                    "Error with handler " +
+                            handlerName.getNodeValue() +
+                            ": no file name specified"
+            );
+            return;
+        }
+
+        try {
+            Handler fileHandler = new HTMLHandler(fileName.getNodeValue(), layout);
+            handlers.put(handlerName.getNodeValue(), fileHandler);
+        } catch (IOException e) {
+            LOGGER.error(
+                    "Error with handler " +
+                            handlerName.getNodeValue() +
+                            ": cannot write to file " +
+                            fileName.getNodeValue()
+            );
+        }
+    }
+
     private static void parseProperties(Node handlerNode, Properties properties) {
         NodeList childNodes = handlerNode.getChildNodes();
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -265,7 +301,22 @@ public class XMLConfigurationParser {
         return layout;
     }
 
-    public static void main(String[] args) {
-        parse(Paths.get(".", "resources", "log-config.xml"));
+    private static HTMLLayout parseHTMLLayout(Node handlerNode) {
+        HTMLLayout layout = HTMLLayout.DEFAULT;
+        NodeList childNodes = handlerNode.getChildNodes();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            Node childNode = childNodes.item(i);
+            if (childNode.getNodeName().equals("HTMLLayout")) {
+                Node htmlAttr = childNode.getAttributes().getNamedItem("title");
+                Node dateTimePatternAttr = childNode.getAttributes().getNamedItem("dateTimePattern");
+                String pattern = dateTimePatternAttr == null ? null : dateTimePatternAttr.getNodeValue();
+                if (htmlAttr == null) {
+                    layout = HTMLLayout.DEFAULT;
+                } else {
+                    layout = new HTMLLayout(htmlAttr.getNodeValue(), pattern);
+                }
+            }
+        }
+        return layout;
     }
 }

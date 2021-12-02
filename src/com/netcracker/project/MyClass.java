@@ -8,5 +8,7 @@ public class MyClass {
 
     public static void main(String[] args) {
         LOGGER.info("Test");
+        LOGGER.warn("Warning message");
+        LOGGER.error(new Exception("Test error"));
     }
 }

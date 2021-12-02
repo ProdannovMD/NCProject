@@ -8,3 +8,41 @@ to file: 15:39:52.800::15862550708500 [main] INFO com.netcracker.project.MyClass
 to file: 15:40:41.283::15911033769100 [main] INFO com.netcracker.project.MyClass - Test
 to file: 15:41:51.233::15980984064300 [main] INFO com.netcracker.project.MyClass - Test
 to file: 15:49:01.219::16410969658600 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:11:35.758::26620904669500 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:12:35.136::26680283137000 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:14:57.628::26822773838200 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:16:25.649::26910794714400 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:28:40.085::27645231309900 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:29:27.123::27692269820400 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:29:27.127::27692273671700 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:29:27.133::27692279767800 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:35:02.582::28027728025500 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:35:02.588::28027734516200 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:35:02.593::28027739512400 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:36:07.931::28093077280700 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:36:07.935::28093080803600 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:36:07.937::28093083030500 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:36:13.026::28098172135800 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:36:13.034::28098179874300 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:36:13.040::28098186220700 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:36:22.407::28107553441900 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:36:22.411::28107556951800 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:36:22.416::28107562444400 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:38:12.293::28217439552400 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:38:12.302::28217447928500 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:38:12.308::28217454787000 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:39:46.477::28311623324000 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:39:46.482::28311628688200 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:39:46.489::28311634769700 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:41:52.890::28438036179500 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:41:52.901::28438047280100 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:41:52.907::28438053604300 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:48:28.685::28833831307200 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:48:28.691::28833837218600 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:48:28.699::28833844712000 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:49:03.084::28868230422100 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:49:03.090::28868236981400 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:49:03.097::28868243178400 [main] ERROR com.netcracker.project.MyClass - 
+to file: 19:49:40.548::28905694470200 [main] INFO com.netcracker.project.MyClass - Test
+to file: 19:49:40.552::28905698314500 [main] WARN com.netcracker.project.MyClass - Warning message
+to file: 19:49:40.559::28905705827600 [main] ERROR com.netcracker.project.MyClass - 

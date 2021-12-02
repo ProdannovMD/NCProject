@@ -34,42 +34,6 @@ public class MailHandler implements Handler {
         this.layout = layout;
     }
 
-    public static void main(String[] args) throws MessagingException {
-        Properties prop = new Properties();
-        prop.put("mail.smtp.auth", true);
-        prop.put("mail.smtp.starttls.enable", "true");
-        prop.put("mail.smtp.host", "smtp.mailtrap.io");
-        prop.put("mail.smtp.port", "2525");
-        prop.put("mail.smtp.ssl.trust", "smtp.mailtrap.io");
-        prop.put("mail.user", "9037aa6f74e463");
-        prop.put("mail.password", "f9ae46d93c0655");
-
-        Session session = Session.getInstance(prop, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(prop.getProperty("mail.user"), prop.getProperty("mail.password"));
-            }
-        });
-
-        Message message = new MimeMessage(session);
-        message.setFrom(new InternetAddress("nclogger@mail.ru"));
-        message.setRecipients(
-                Message.RecipientType.TO, InternetAddress.parse("prodanovmd@gmail.com"));
-        message.setSubject("Mail Subject");
-
-        String msg = "This is my first email using JavaMailer 2";
-
-        BodyPart bodyPart = new MimeBodyPart();
-        bodyPart.setContent(msg, "text/html; charset=utf-8");
-
-        Multipart multipart = new MimeMultipart();
-        multipart.addBodyPart(bodyPart);
-
-        message.setContent(multipart);
-
-        Transport.send(message);
-    }
-
     @Override
     public void logMessage(Level level, String message, String name, Throwable throwable) {
         String content = layout.apply(level, message, name, throwable);
