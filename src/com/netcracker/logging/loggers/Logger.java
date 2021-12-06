@@ -4,7 +4,6 @@ import com.netcracker.logging.filters.Filter;
 import com.netcracker.logging.handlers.Handler;
 import com.netcracker.logging.levels.Level;
 
-import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -34,7 +34,7 @@
     <Logger name="com.netcracker.project.MyClass" filtersMode="or">
       <HandlerRef ref="consoleHandler"/>
       <HandlerRef ref="fileHandler"/>
-<!--      <HandlerRef ref="mailHandler"/>-->
+      <HandlerRef ref="mailHandler"/>
       <HandlerRef ref="htmlHandler"/>
       <FilterRef ref="errorLevelFilter"/>
       <FilterRef ref="infoLevelFilter"/>

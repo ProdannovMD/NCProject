@@ -13,11 +13,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class HTMLHandler implements Handler {
-    private final String template;
     private final HTMLLayout layout;
     private final Path path;
 
@@ -28,7 +25,7 @@ public class HTMLHandler implements Handler {
     public HTMLHandler(String fileName, HTMLLayout layout) throws IOException {
         this.layout = layout;
         this.path = Paths.get(fileName);
-        template = HTMLTemplate.getTemplate(layout.getTitle());
+        String template = HTMLTemplate.getTemplate(layout.getTitle());
 
         if (!Files.exists(path))
             Files.createFile(path);
