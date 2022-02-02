@@ -24,6 +24,11 @@ public class LogManager {
         return getLogger(name);
     }
 
+    public static Logger getLogger(String prefix,  Class<?> clazz) {
+        String name = prefix + "." + clazz.getName();
+        return getLogger(name);
+    }
+
     static {
         LOGGER.start();
         LOGGER.info("Starting configuration");

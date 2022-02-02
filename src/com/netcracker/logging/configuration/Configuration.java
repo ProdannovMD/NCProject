@@ -49,6 +49,7 @@ public class Configuration {
         ROOT_LOGGER = getNewDefaultLogger("ROOT");
         loggers.put("ROOT", ROOT_LOGGER);
 
+        loggers.putAll(configuredLoggers);
         initLoggers(configuredLoggers, ROOT, ROOT_LOGGER);
     }
 
@@ -61,6 +62,7 @@ public class Configuration {
 
     private void initLoggers(Map<String, Logger> configuredLoggers, File currentRoot, Logger currentRootLogger) {
         File[] childrenFiles = currentRoot.listFiles();
+
         if (childrenFiles != null) {
             for (File childrenFile : childrenFiles) {
                 String path = childrenFile.getAbsolutePath().substring(ROOT.getAbsolutePath().length() + 1);
@@ -72,8 +74,9 @@ public class Configuration {
                 Logger childrenLogger;
                 if (configuredLoggers.containsKey(path))
                     childrenLogger = configuredLoggers.get(path);
-                else
-                    childrenLogger = getNewDefaultLogger(path);
+                else {
+                    childrenLogger = currentRootLogger.copy(path);
+                }
                 currentRootLogger.addChildrenLogger(childrenLogger);
                 loggers.put(path, childrenLogger);
 

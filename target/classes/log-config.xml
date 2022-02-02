@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration>
+<Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="http://maven.apache.org/POM/4.0.0"
+               xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 file:///C:\Users\Professional\IdeaProjects\NetCracker\NCProject\resources\schema\Configuration.xsd">
   <Handlers>
     <Console name="consoleHandler">
       <PatternLayout pattern="%d{HH:mm:ss.SSS}::%N [%t] %level %logger{36} - %msg%n"/>
@@ -31,10 +33,10 @@
     <Level name="infoLevelFilter" level="info" mode="equal"/>
   </Filters>
   <Loggers>
-    <Logger name="com.netcracker.project.MyClass" filtersMode="or">
+    <Logger name="TEST" filtersMode="or">
       <HandlerRef ref="consoleHandler"/>
       <HandlerRef ref="fileHandler"/>
-<!--      <HandlerRef ref="mailHandler"/>-->
+      <HandlerRef ref="mailHandler"/>
       <HandlerRef ref="htmlHandler"/>
       <FilterRef ref="errorLevelFilter"/>
       <FilterRef ref="infoLevelFilter"/>

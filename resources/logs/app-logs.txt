@@ -67,3 +67,7 @@ to file: 20:17:49.211::30594357064400 [main] ERROR com.netcracker.project.MyClas
 to file: 20:19:13.040::30678186817600 [main] ERROR com.netcracker.project.MyClass - 
 to file: 20:20:01.395::30726540916300 [main] INFO com.netcracker.project.MyClass - Test
 to file: 20:20:01.398::30726544576100 [main] ERROR com.netcracker.project.MyClass - 
+to file: 15:03:38.564::9055315579800 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:47:07.211::11663961565700 [main] INFO com.netcracker.project.MyClass - Test
+to file: 15:47:10.440::11667190721100 [main] ERROR com.netcracker.project.MyClass - 
+to file: 15:48:32.254::11749005809800 [main] INFO com.netcracker.project.MyClass - Test

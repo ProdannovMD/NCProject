@@ -84,6 +84,9 @@ public class Logger {
         logMessage(Level.TRACE, null, throwable);
     }
 
+    public Logger copy(String name) {
+        return new Logger(name, HANDLERS, FILTERS, mode);
+    }
 
     private boolean isApplicable(Level level, String message, Throwable throwable) {
         if (mode == LoggerFiltersModes.AND) {

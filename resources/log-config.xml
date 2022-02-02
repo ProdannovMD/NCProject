@@ -33,7 +33,7 @@
     <Level name="infoLevelFilter" level="info" mode="equal"/>
   </Filters>
   <Loggers>
-    <Logger name="com.netcracker.project.MyClass" filtersMode="or">
+    <Logger name="TEST" filtersMode="or">
       <HandlerRef ref="consoleHandler"/>
       <HandlerRef ref="fileHandler"/>
       <HandlerRef ref="mailHandler"/>

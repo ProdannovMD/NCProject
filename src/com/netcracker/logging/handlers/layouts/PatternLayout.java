@@ -80,8 +80,8 @@ public class PatternLayout {
     private String applyMessage(String currentMessage, String message) {
         if (message == null)
             message = "";
-        message = message.replace("\\", "\\\\");
-        return currentMessage.replaceAll("(%message)|(%msg)|(%m)", message);
+//        message = message.replace("\\", "\\\\");
+        return currentMessage.replaceAll("(%message)|(%msg)|(%m)", Matcher.quoteReplacement(message));
     }
 
     private String applyLevel(String currentMessage, Level level) {

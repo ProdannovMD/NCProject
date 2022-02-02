@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://maven.apache.org/POM/4.0.0"
+           xmlns="http://maven.apache.org/POM/4.0.0"
+           elementFormDefault="qualified">
+
+    <xs:attributeGroup name="basicHandlerAttributes">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="fileHandlerAttributes">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="fileName" type="xs:string" use="required"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="basicFilterAttributes">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="level">
+            <xs:simpleType>
+                <xs:restriction>
+                    <xs:enumeration value="all"/>
+                    <xs:enumeration value="trace"/>
+                    <xs:enumeration value="debug"/>
+                    <xs:enumeration value="error"/>
+                    <xs:enumeration value="warn"/>
+                    <xs:enumeration value="fatal"/>
+                    <xs:enumeration value="info"/>
+                    <xs:enumeration value="off"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="mode">
+            <xs:simpleType>
+                <xs:restriction>
+                    <xs:enumeration value="less_or_equal"/>
+                    <xs:enumeration value="greater_or_equal"/>
+                    <xs:enumeration value="equal"/>
+                    <xs:enumeration value="not_equal"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="basicLoggerAttributes">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="filtersMode">
+            <xs:simpleType>
+                <xs:restriction>
+                    <xs:enumeration value="and"/>
+                    <xs:enumeration value="or"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="refAttributes">
+        <xs:attribute name="ref" type="xs:string" use="required"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="patternLayoutAttributes">
+        <xs:attribute name="pattern" type="xs:string" use="required"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="htmlLayoutAttributes">
+        <xs:attribute name="title" type="xs:string"/>
+        <xs:attribute name="dateTimePattern" type="xs:string"/>
+    </xs:attributeGroup>
+
+    <xs:attributeGroup name="propertyAttributes">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="value" type="xs:string" use="required"/>
+    </xs:attributeGroup>
+
+    <xs:element name="Configuration">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="Handlers" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="Console" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:choice>
+                                        <xs:element name="PatternLayout" minOccurs="0" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:attributeGroup ref="patternLayoutAttributes"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:choice>
+                                    <xs:attributeGroup ref="basicHandlerAttributes"/>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element name="File" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                        <xs:element name="PatternLayout" minOccurs="0" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:attributeGroup ref="patternLayoutAttributes"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:choice>
+                                    <xs:attributeGroup ref="fileHandlerAttributes"/>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element name="HTML" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                        <xs:element name="HTMLLayout" minOccurs="0" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:attributeGroup ref="htmlLayoutAttributes"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:choice>
+                                    <xs:attributeGroup ref="fileHandlerAttributes"/>
+                                </xs:complexType>
+                            </xs:element>
+
+                            <xs:element name="Mail" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                        <xs:element name="PatternLayout" minOccurs="0" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:attributeGroup ref="patternLayoutAttributes"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="Properties" minOccurs="1" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                                    <xs:element name="Property" minOccurs="1" maxOccurs="unbounded">
+                                                        <xs:complexType>
+                                                            <xs:attributeGroup ref="propertyAttributes"/>
+                                                        </xs:complexType>
+                                                    </xs:element>
+                                                </xs:choice>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:choice>
+                                    <xs:attributeGroup ref="basicHandlerAttributes"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element name="Filters" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="Level" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:attributeGroup ref="basicFilterAttributes"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element name="Loggers" minOccurs="0" maxOccurs="unbounded">
+                    <xs:complexType>
+                        <xs:choice minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="Logger" minOccurs="0" maxOccurs="unbounded">
+                                <xs:complexType>
+                                    <xs:choice minOccurs="0" maxOccurs="unbounded">
+                                        <xs:element name="HandlerRef" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:attributeGroup ref="refAttributes"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                        <xs:element name="FilterRef" minOccurs="0" maxOccurs="unbounded">
+                                            <xs:complexType>
+                                                <xs:attributeGroup ref="refAttributes"/>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:choice>
+                                    <xs:attributeGroup ref="basicLoggerAttributes"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
